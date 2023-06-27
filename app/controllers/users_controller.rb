@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:update]
 
   def show
-    @user = User.find(params[:id])
+    @user = .find 
     @books = @user.books
     @book = Book.new
   end
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       redirect_to users_path(@user), notice: "You have updated user successfully."
     else
-      render ""
+      render "edit"
     end
   end
 
