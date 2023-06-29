@@ -1,5 +1,4 @@
 <div class='container'>
-  <%= render 'layouts/errors', obj: @book %>
   <div class='row'>
     <div class='col-md-3'>
       <h2>User info</h2>
@@ -21,6 +20,10 @@
             <td><%= link_to @book.title, @book %></td>
             <td><%= @book.body %></td>
             <td>
+              <p>コメント数:<%= @book.book_comments.count %></p>
+            </td>
+            <td><%= render "favorites/btn", book: @book %></td>
+            <td>
               <% if @book.user == current_user %>
                 <%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success" %>
               <% end %>
@@ -30,54 +33,16 @@
                 <%= link_to 'Destroy', @book, method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger"%>
               <% end %>
             </td>
-            <td>
-              <% if @book.favorited_by?(current_user) %>
-              <p>
-                <%= link_to book_favorites_path(@book), method: :delete do %>
-                ♥<%= @book.favorites.count %> いいね
-                <% end %>
-              </p>
-              <% else %>
-              <p>
-                <%= link_to book_favorites_path(@book), method: :post do %>
-                ♡<%= @book.favorites.count %> いいね
-                <% end %>
-              </p>
-              <% end %>
-            </td>
-            <td>
-              <p>コメント数:<%= @book.book_comments.count %></p>
-            </td>
           </tr>
   		  </thead>
-  		  <% @book.book_comments.each do |book_comment| %>
         <tbody>
           <tr>
-            <td>
-              <%= image_tag book_comment.user.get_profile_image, size:'50x50' %>
-            </td>
-            <td>
-              <%= book_comment.user.name %>
-            </td>
-            <td>
-              <%= book_comment.comment %>
-            </td>
-            <td>
-              <% if book_comment.user == current_user %>
-              <%= link_to "Destroy", book_book_comment_path(book_comment.book, book_comment), method: :delete %>
-              <% end %>
-            </td>
+            <%= render "book_comments/index", book: @book %>
           </tr>
-        <% end %>
         </tbody>
         <tfoot>
           <tr>
-            <td>
-              <%= form_with model: [@book, @book_comment] do |f| %>
-                <%= f.text_area :comment, placeholder: "コメントをここに" %>
-                <%= f.submit "送信" %>
-              <% end %>
-            </td>
+            <%= render "book_comments/form", book: @book, book_comment: @book_comment %>
           </tr>
         </tfoot>
       </table>
