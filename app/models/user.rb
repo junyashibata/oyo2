@@ -11,11 +11,19 @@ class User < ApplicationRecord
   has_many :followings, through: :relationships, source: :followed
   has_many :reverse_of_relationships, class_name:"Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :followers, through: :reverse_of_relationships, source: :follower
-  
-  def is_followed_by?(user)
-    reverse_of_relationships.find_by(follower_id: user.id).present?
+
+  def follow(user)
+    relationships.create(followed_id: user.id)
   end
-  
+
+  def unfollow(user)
+    relationships.find_by(followed_id: user.id).destroy
+  end
+
+  def following?(user)
+    followings.include?(user)
+  end
+
   has_one_attached :profile_image
 
   validates :name, length: { minimum: 2, maximum: 20 }, uniqueness: true
