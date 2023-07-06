@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :chats
   has_many :rooms, through: :user_rooms
   has_many :view_counts, dependent: :destroy
+  
 
   def follow(user)
     relationships.create(followed_id: user.id)
@@ -49,5 +50,7 @@ class User < ApplicationRecord
     (profile_image.attached?) ? profile_image : 'no_image.jpg'
   end
   
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
   
 end
